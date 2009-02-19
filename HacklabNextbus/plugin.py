@@ -35,7 +35,6 @@ import supybot.ircutils as ircutils
 import supybot.callbacks as callbacks
 
 import re
-import urllib
  
 class HacklabNextbus(callbacks.Plugin):
     """Add the help for "@plugin help HacklabNextbus" here
@@ -43,12 +42,11 @@ class HacklabNextbus(callbacks.Plugin):
     threaded = True
 
     def _get_eta(self, url):
+        regex = 'span style="font-size: \d+px; font-weight: bold;">&nbsp;(\d+|Arriving)'
 	minutes = []
-        handle = urllib.urlopen(url)
-	for text in handle:
-	        match = re.search('span style="font-size: \d+px; font-weight: bold;">&nbsp;(\d+|Arriving)', text)
-	        if match: 
-			minutes.append(match.group(1))
+        page = utils.web.getUrl(url)
+        for match in re.finditer(regex, page): 
+            minutes.append(match.group(1))
         return minutes
 
     def nextbus(self, irc, msg, args):

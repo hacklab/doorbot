@@ -34,7 +34,6 @@ import supybot.plugins as plugins
 import supybot.ircutils as ircutils
 import supybot.callbacks as callbacks
 import supybot.ircdb as ircdb
-
 import urllib
 
 class HacklabSign(callbacks.Plugin):
@@ -51,7 +50,7 @@ class HacklabSign(callbacks.Plugin):
         urlbase = "http://192.168.111.4:8080/SignService?"
         urlargs = urllib.urlencode({ "Action" : "ShowMessage", "FontSize" : 10, "Version" : "2009-02-03", "Message" : message })
         url = format("%s%s", urlbase, urlargs)
-        handle = urllib.urlopen(url)
+        handle = utils.web.getUrl(url)
 	irc.noReply()
     sign = wrap(sign, ["text"])
 

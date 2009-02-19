@@ -52,8 +52,6 @@ __url__ = '' # 'http://supybot.com/Members/yourname/HacklabSign/download'
 import config
 import plugin
 reload(plugin) # In case we're being reloaded.
-import urllib
-reload(urllib)
 # Add more reloads here if you add third-party modules and want them to be
 # reloaded when this plugin is reloaded.  Don't forget to import them as well!
 
