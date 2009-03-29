@@ -69,32 +69,7 @@ class Tail(callbacks.Plugin):
         while line:
             line = line.strip()
             if line:
-		# Paul -- hack to filter
-		#print "DEBUG Tail plugin, line is:%s"%line
-		if "INFO  " in line:
-			if ",front,denied" in line:
-				#print "DEBUG Tail plugin, found denied line:%s"%line
-				line = "Unauthorized HID denied at front door!"
-				commands.getoutput("java -jar /home/doorbot/sendText.jar localhost 2332 3 'Unauthorized HID\\ndenied access!!'")
-               			self._send(self.lastIrc, "", line)
-			# remove dupes from log 
-			elif ",front,access denied" not in line:
-				try:
-					censorline = line.split("INFO  ")[1]
-					#print "DEBUG Tail plugin, sending INFO line to irc:%s"%censorline
-					if "has entered" in censorline:
-               					self._send(self.lastIrc, "", censorline)
-						person=censorline.split("has")[0]
-						(stat,out) = commands.getstatusoutput("java -jar /home/doorbot/sendText.jar localhost 2332 3 '%s\\nhas entered.'"%person)
-				except:
-               				self._send(self.lastIrc, "", line)
-					#print "DEBUG Tail plugin, INFO except error with line:%s"%line
-					pass
-			
-		else:
-			#print "DEBUG Tail plugin: not a line containing INFO string"
-			if not "DEBUG" in line and not "Cookie rejected" in line:
-				self._send(self.lastIrc, filename, line)
+                self._send(self.lastIrc, filename, line)
             pos = fd.tell()
             line = fd.readline()
         fd.seek(pos)
@@ -117,6 +92,8 @@ class Tail(callbacks.Plugin):
     def _send(self, irc, filename, text):
         if self.registryValue('bold'):
             filename = ircutils.bold(filename)
+        if self.registryValue('hidefilename'):
+            filename = ""
         notice = self.registryValue('notice')
         payload = '%s: %s' % (filename, text)
         for target in self.registryValue('targets'):

@@ -66,6 +66,7 @@ conf.registerGlobalValue(Tail, 'period',
     registry.PositiveInteger(60, """Determines how often the bot will check
     the files that are being tailed.  The number is in seconds.  This plugin
     must be reloaded for changes to this period to take effect."""))
-
+conf.registerGlobalValue(Tail, 'hidefilename',
+    registry.Boolean(False, """If true, hides the filename"""))
 
 # vim:set shiftwidth=4 softtabstop=4 expandtab textwidth=79:
