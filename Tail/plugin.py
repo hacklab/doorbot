@@ -70,6 +70,7 @@ class Tail(callbacks.Plugin):
             line = line.strip()
             if line:
                 self._send(self.lastIrc, filename, line)
+                self._sign(line)
             pos = fd.tell()
             line = fd.readline()
         fd.seek(pos)
@@ -98,6 +99,10 @@ class Tail(callbacks.Plugin):
         payload = '%s: %s' % (filename, text)
         for target in self.registryValue('targets'):
             irc.reply(payload, to=target, notice=notice, private=True)
+
+    def _sign(text):
+        (stat, out) = commands.getstatusoutput(
+            "java -jar /home/doorbot/sendText.jar localhost 2332 3 '%s'"%text)
 
     def add(self, irc, msg, args, filename):
         """<filename>
